@@ -1,38 +1,50 @@
 import React, { Component } from "react";
 import Directory from "./DirectoryComponent";
 import CampsiteInfo from './CampsiteInfoComponent';
-import { View } from 'react-native';
-import { CAMPSITES } from "../shared/campsites";
+import { View, Platform } from 'react-native';
+import { createStackNavigator } from 'react-navigation-stack';
+import { createAppContainer } from 'react-navigation';
+//we deleted the CAMPSITE import cause we wont use it here anymore
+//main component is a central hub that holds all navigators like it held routes in react
 
-//this is a container component 
-//will be parent to presentational component
+//funciton with components available for the stack in argument
+const DirectoryNavigator = createStackNavigator(
+    {
+        Directory: { screen: Directory },
+        CampsiteInfo: { screen: CampsiteInfo }
+    },
+    //optional second argument
+    //we are setting default options and style
+    //for more properties available read documentation
+    {
+        initialRouteName: 'Directory',
+        defaultNavigationOptions: {
+            headerStyle: {
+                backgroundColor: '#5637DD'
+            },
+            headerTintColor: '#fff',
+            headerTitleStyle: {
+                color: '#fff'
+            }
+        }
+    }
+);
+
+//we'll pass what we created to this function
+//connects navigator to reactnative app
+const AppNavigator = createAppContainer(DirectoryNavigator);
+
+
 class Main extends Component {
-    //need a constructor to hold state data
-    //a space has to be reserved in the state to keep track of which cmapsite has been selected
-    constructor(props) {
-        super(props);
-        this.state = {
-            campsites: CAMPSITES,
-            selectedCampsite: null
-        };
-    }
-    //event handler that will update "selectedCampsite:null" when campsite is selected
-    //and so update the general state
-    onCampsiteSelect(campsiteId) {
-        this.setState({ selectedCampsite: campsiteId });
-    }
-    //return the components and passing state data and props
     render() {
         return (
-            <View style={{ flex: 1 }}>
-                <Directory
-                    campsites={this.state.campsites}
-                    onPress={campsiteId => this.onCampsiteSelect(campsiteId)}
-                />
-                <CampsiteInfo
-                    campsite={this.state.campsites.filter(
-                        campsite => campsite.id === this.state.selectedCampsite)[0]}
-                />
+            <View
+                style={{
+                    flex: 1,
+                    //code to compensate for possible discrepancies btw android and ios
+                    paddingTop: Platform.OS === 'ios' ? 0 : Expo.Constants.statusBarHeight
+                }}>
+                <AppNavigator />
             </View>
         );
     }

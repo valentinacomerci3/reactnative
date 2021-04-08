@@ -1,40 +1,44 @@
-import React from 'react';
-
-//importing components from reactnative
-//these two kinda work together like ul and li
+import React, { Component } from 'react';
 import { FlatList } from 'react-native';
 import { ListItem } from 'react-native-elements';
+import { CAMPSITES } from '../shared/campsites';
 
-//create functional components that receives props from parent Main
-function Directory(props) {
-    //function that defines how to render each item
-    const renderDirectoryItem = ({ item }) => {
+//the state is here now
+class Directory extends Component {
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            campsites: CAMPSITES
+        };
+    }
+    //configure text for header title on the navigator screen
+    //static kw set method on class and not object 
+    static navigationOptions = {
+        title: 'Directory'
+    }
+
+    render() {
+        const { navigate } = this.props.navigation;
+        const renderDirectoryItem = ({ item }) => {
+            return (
+                <ListItem
+                    title={item.name}
+                    subtitle={item.description}
+                    onPress={() => navigate('CampsiteInfo', { campsiteId: item.id })}
+                    leftAvatar={{ source: require('./images/react-lake.jpg') }}
+                />
+            );
+        };
+
         return (
-            <ListItem
-                //
-                title={item.name}
-                subtitle={item.description}
-                onPress={() => props.onPress(item.id)}
-                //notice we need two sets of curly brace one for jsx one for obj literals
-                leftAvatar={{ source: require('./images/react-lake.jpg') }}
+            <FlatList
+                data={this.state.campsites}
+                renderItem={renderDirectoryItem}
+                keyExtractor={item => item.id.toString()}
             />
         );
-    };
-    //first we created this component
-    return (
-        //this components expect 3 props
-        <FlatList
-            //1- data prop with an array 
-            data={props.campsites}
-            //2- render-item prop will specify how to render each item in list
-            //takes a function name that we'll define
-            renderItem={renderDirectoryItem}
-            //3-set a prop to use as a unique key
-            //we'll use the id since every item has a differnt one
-            // we have to convert it with to string since it expects a string
-            keyExtractor={item => item.id.toString()}
-        />
-    );
+    }
 }
 
 export default Directory;

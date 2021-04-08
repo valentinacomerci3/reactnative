@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { Text, View } from 'react-native';
 import { Card } from 'react-native-elements';
+import { CAMPSITES } from '../shared/campsites';
 
 function RenderCampsite({ campsite }) {
-    //make sure it is not null or not define
-    //if it exist it will return the card
+
     if (campsite) {
         return (
             <Card
@@ -17,14 +17,27 @@ function RenderCampsite({ campsite }) {
             </Card>
         );
     }
-    //if we dont get a valid campsite object well return empty view
     return <View />;
 }
-//functional component that will receive props
-function CampsiteInfo(props) {
-    //from its props we pull out a campsite object 
-    //and send it to other component
-    return <RenderCampsite campsite={props.campsite} />;
+
+class CampsiteInfo extends Component {
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            campsites: CAMPSITES
+        };
+    }
+
+    static navigationOptions = {
+        title: 'Campsite Information'
+    }
+
+    render() {
+        const campsiteId = this.props.navigation.getParam('campsiteId');
+        const campsite = this.state.campsites.filter(campsite => campsite.id === campsiteId)[0];
+        return <RenderCampsite campsite={campsite} />;
+    }
 }
 
 export default CampsiteInfo;
