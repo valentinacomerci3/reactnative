@@ -20,6 +20,10 @@ function RenderCampsite({ campsite }) {
     return <View />;
 }
 
+//this was a funcitonal component
+//we convwerted in class comp so 
+//we gave it constructor and not passed state through props
+//no we access props with this.state.
 class CampsiteInfo extends Component {
 
     constructor(props) {
@@ -34,6 +38,8 @@ class CampsiteInfo extends Component {
     }
 
     render() {
+        //getting the parameter we just gave to the navigation function in directory
+
         const campsiteId = this.props.navigation.getParam('campsiteId');
         const campsite = this.state.campsites.filter(campsite => campsite.id === campsiteId)[0];
         return <RenderCampsite campsite={campsite} />;

@@ -38,6 +38,7 @@ class Home extends Component {
 
     render() {
         return (
+            //scroll view is a react native comp to groupo stuff liek Flatlist
             <ScrollView>
                 <RenderItem
                     item={this.state.campsites.filter(campsite => campsite.featured)[0]}
