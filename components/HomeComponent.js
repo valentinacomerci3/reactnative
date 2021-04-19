@@ -1,9 +1,6 @@
 import React, { Component } from 'react';
 import { View, Text, ScrollView } from 'react-native';
 import { Card } from 'react-native-elements';
-import { CAMPSITES } from '../shared/campsites';
-import { PROMOTIONS } from '../shared/promotions';
-import { PARTNERS } from '../shared/partners';
 import { connect } from 'react-redux';
 import { baseUrl } from '../shared/baseUrl';
 import Loading from './LoadingComponent';
@@ -17,29 +14,34 @@ const mapStateToProps = state => {
 };
 
 function RenderItem(props) {
-    const {item} = props;
+    const { item } = props;
+    // console.log(props)
 
     if (props.isLoading) {
         return <Loading />;
-    }
+    };
+
     if (props.errMess) {
         return (
             <View>
                 <Text>{props.errMess}</Text>
             </View>
         );
-    }
+    };
+
     if (item) {
         return (
             <Card
                 featuredTitle={item.name}
-                image={{uri: baseUrl + item.image}}
+                image={{ uri: baseUrl + item.image }}
             >
-                <Text style={{ margin: 10 }}>
+                <Text
+                    style={{ margin: 10 }}
+                >
                     {item.description}
                 </Text>
             </Card>
-        );
+        )
     }
     return <View />;
 }
@@ -52,7 +54,6 @@ class Home extends Component {
 
     render() {
         return (
-            //scroll view is a react native comp to groupo stuff liek Flatlist
             <ScrollView>
                 <RenderItem
                     item={this.props.campsites.campsites.filter(campsite => campsite.featured)[0]}
@@ -71,7 +72,7 @@ class Home extends Component {
                 />
             </ScrollView>
         );
-    }
-}
+    };
+};
 
 export default connect(mapStateToProps)(Home);
